@@ -1,0 +1,2 @@
+# chatbot-service
+Chatbot service built with FastAPI and powered by Large Language Models. Containerized with Docker for easy deployment and scalability.
