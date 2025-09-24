@@ -1,7 +1,14 @@
 IMAGE_NAME := chatbot-service
 CONTAINER_NAME := chatbot-server
 
-.PHONY: install run down clean
+.PHONY: install run down clean, help
+
+help:
+	@echo "Available commands:"
+	@echo "  install  - Install all requirements to run the service"
+	@echo "  run      - Run the service and all related services in Docker"
+	@echo "  down     - Teardown of all running services"
+	@echo "  clean    - Teardown and removal of all containers"
 
 install:
 	@if ! command -v docker >/dev/null 2>&1; then \
