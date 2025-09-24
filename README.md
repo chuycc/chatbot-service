@@ -4,7 +4,7 @@ Chatbot service built with FastAPI and powered by Large Language Models. Contain
 ## TODO
 - [X] Create Dockerfile
 - [ ] Create Makefile
-    - [ ] make install
+    - [X] make install
     - [ ] make run
     - [ ] make down
     - [ ] make clean
