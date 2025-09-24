@@ -8,7 +8,7 @@ install:
 	@echo "Building Docker image..."
 	@docker build -t chatbot-service .
 
-run:
+run: install
 	@echo "Running Docker container..."
 	@if docker ps -a --format '{{.Names}}' | grep -w "chatbot-server" >/dev/null; then \
 		docker start chatbot-server; \
