@@ -7,7 +7,7 @@ Chatbot service built with FastAPI and powered by Large Language Models. Contain
     - [X] make install
     - [X] make run
     - [X] make down
-    - [ ] make clean
+    - [X] make clean
     - [ ] make test
     - [ ] make
 - [ ] Chatbot API
