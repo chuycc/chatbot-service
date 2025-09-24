@@ -10,7 +10,11 @@ install:
 
 run:
 	@echo "Running Docker container..."
-	@docker run -d --name chatbot-server -p 8000:8000 chatbot-service
+	@if docker ps -a --format '{{.Names}}' | grep -w "chatbot-server" >/dev/null; then \
+		docker start chatbot-server; \
+	else \
+		docker run -d --name chatbot-server -p 8000:8000 chatbot-service; \
+	fi
 
 down:
 	@echo "Stopping Docker container..."
