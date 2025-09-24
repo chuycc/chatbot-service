@@ -18,7 +18,9 @@ run:
 
 down:
 	@echo "Stopping Docker container..."
-	@docker stop chatbot-server
+	@if docker ps -a --format '{{.Names}}' | grep -w "chatbot-server" >/dev/null; then \
+		docker stop chatbot-server; \
+	fi
 
 clean:
 	@echo "Removing Docker container and image"
