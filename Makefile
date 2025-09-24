@@ -20,7 +20,10 @@ install:
 		exit 1; \
 	fi
 	@echo "Building Docker image..."
-	@docker build -t $(IMAGE_NAME) . >/dev/null 2>&1
+	@if ! docker build -t $(IMAGE_NAME) . >/dev/null 2>&1; then \
+		echo "Docker build failed. Please visit https://www.dockerstatus.com"; \
+		exit 1; \
+	fi
 
 run: install
 	@echo "Running Docker container..."
