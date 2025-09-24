@@ -1,4 +1,4 @@
-.PHONY: install run
+.PHONY: install run down
 
 install:
 	@if ! command -v docker >/dev/null 2>&1; then \
@@ -11,3 +11,7 @@ install:
 run:
 	@echo "Running Docker container..."
 	@docker run -d --name chatbot-server -p 8000:8000 chatbot-service
+
+down:
+	@echo "Stopping Docker container..."
+	@docker stop chatbot-server
