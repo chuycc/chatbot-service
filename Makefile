@@ -1,7 +1,7 @@
 IMAGE_NAME := chatbot-service
 CONTAINER_NAME := chatbot-server
 
-.PHONY: install run down clean, help
+.PHONY: install run down clean, help, test
 
 help:
 	@echo "Available commands:"
@@ -55,3 +55,11 @@ clean: down
 	@if docker images --format '{{.Repository}}' | grep -w "$(IMAGE_NAME)" >/dev/null; then \
 		docker rmi -f $(IMAGE_NAME) >/dev/null 2>&1; \
 	fi
+
+test:
+	@echo "Running tests..."
+	@if ! command -v pytest >/dev/null 2>&1; then \
+		echo "pytest is not installed. Please install pytest to run tests."; \
+		exit 1; \
+	fi
+	@pytest
