@@ -20,7 +20,9 @@ Chatbot service built with FastAPI and powered by Large Language Models. Contain
 ## Storage adapter
 The service is designed with a flexible storage adapter architecture, allowing support for multiple storage backends such as memory, filesystem, Redis, databases, and more.
 
-Currently, `memory` is the default and only supported storage type. Additional adapters (e.g., Redis, database, filesystem) can be added as needed.
+### Storage types available
+1. `memory`
+2. `filesystem`
 
 You can configure the storage type in multiple ways:
 ### 1. `.env` file
