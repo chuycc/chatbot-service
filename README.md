@@ -12,7 +12,7 @@ Chatbot service built with FastAPI and powered by Large Language Models. Contain
     - [X] make
 - [ ] Chatbot API
     - [X] Data Models
-    - [ ] Basic endpoint
+    - [X] Basic endpoint
     - [ ] Storage layer
     - [ ] LLM layer
     - [ ] Conversation manager
