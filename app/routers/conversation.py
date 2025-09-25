@@ -1,11 +1,11 @@
 from uuid import uuid4
 from fastapi import APIRouter
 from app.models.conversation import ConversationRequest, ConversationResponse, MessageRole, MessageEntry
-from app.adapters.storage.memory import MemoryStorageAdapter
+from app.adapters.storage import get_storage_adapter
 
 router = APIRouter(prefix="/v1", tags=["conversation"])
 
-storage_adapter = MemoryStorageAdapter()
+storage_adapter = get_storage_adapter()
 
 @router.post("/conversation", response_model=ConversationResponse)
 def conversation_endpoint(req: ConversationRequest):
