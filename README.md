@@ -14,19 +14,22 @@ Chatbot service built with FastAPI and powered by Large Language Models. Contain
     - [X] Data Models
     - [X] Basic endpoint
     - [X] Storage adapter
-    - [ ] LLM layer
+    - [X] LLM layer
     - [ ] Conversation manager
 
-## Storage adapter
-The service is designed with a flexible storage adapter architecture, allowing support for multiple storage backends such as memory, filesystem, Redis, databases, and more.
+## Environment variables
+Environment variables can be configured in a `.env` file or set directly in your shell environment.
 
-### Storage types available
-1. `memory`
-2. `filesystem`
+These variables allow you to configure the chatbot service without modifying the codebase. Below are the supported options:
+```
+SERVICE_TIMEOUT=30
+STORAGE_TYPE=memory (Default) | filesystem
+FILESYSTEM_STORAGE_PATH=conversations
+LLM_TYPE=openai
+LLM_TIMEOUT=30
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_CHAT_SETTINGS={"model": "gpt-4o", "max_completion_tokens": 1000, "temperature": 0.5, "OTHER_PARAM": "value"}
+```
 
-You can configure the storage type in multiple ways:
-### 1. `.env` file
-`STORAGE_TYPE=memory`
-
-### 2. Environment variable
-`STORAGE_TYPE=memory uvicorn app.main:app --reload`
+## Adapters
+This service is designed with a flexible adapter architecture, allowing support for multiple Storage types and LLMs.
