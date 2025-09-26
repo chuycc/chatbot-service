@@ -10,7 +10,7 @@ help:
 	@echo "  down     - Teardown of all running services"
 	@echo "  clean    - Teardown and removal of all containers"
 
-install:
+install: clean
 	@if ! command -v docker >/dev/null 2>&1; then \
 		echo "Docker is not installed. Please install Docker."; \
 		exit 1; \
@@ -20,12 +20,16 @@ install:
 		exit 1; \
 	fi
 	@echo "Building Docker image..."
-	@if ! docker build -t $(IMAGE_NAME) . >/dev/null 2>&1; then \
+	@if ! docker build -t $(IMAGE_NAME):latest . >/dev/null 2>&1; then \
 		echo "Docker build failed. Please visit https://www.dockerstatus.com"; \
 		exit 1; \
 	fi
 
 run: install
+	@if lsof -i :8000 >/dev/null 2>&1; then \
+		echo "Error: Port 8000 is already in use. Please free the port and try again."; \
+		exit 1; \
+	fi
 	@echo "Running Docker container..."
 	@if docker ps -a --format '{{.Names}}' | grep -w "$(CONTAINER_NAME)" >/dev/null; then \
 		docker start $(CONTAINER_NAME) >/dev/null 2>&1; \
@@ -53,7 +57,7 @@ clean: down
 	fi
 	@echo "Removing Docker image..."
 	@if docker images --format '{{.Repository}}' | grep -w "$(IMAGE_NAME)" >/dev/null; then \
-		docker rmi -f $(IMAGE_NAME) >/dev/null 2>&1; \
+		docker rmi -f $(IMAGE_NAME):latest >/dev/null 2>&1; \
 	fi
 
 test:
