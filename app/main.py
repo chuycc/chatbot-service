@@ -4,7 +4,7 @@ from app.routers import conversation
 from app.config import settings
 
 app = FastAPI()
-app.add_middleware(TimeoutMiddleware, settings.service_timeout)
+app.add_middleware(TimeoutMiddleware, timeout=settings.service_timeout)
 app.include_router(conversation.router)
 
 @app.get("/")

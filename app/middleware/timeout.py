@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
 class TimeoutMiddleware(BaseHTTPMiddleware):
-    def __init__(self, app, timeout: float = 60.0):
+    def __init__(self, app, timeout: int, **kwargs):
         super().__init__(app)
         self.timeout = timeout
 
