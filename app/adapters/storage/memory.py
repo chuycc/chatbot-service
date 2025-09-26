@@ -22,3 +22,6 @@ class MemoryStorageAdapter(StorageAdapter):
     def delete_conversation(self, conversation_id: str) -> None:
         if conversation_id in self._store:
             del self._store[conversation_id]
+
+    def conversation_exists(self, conversation_id: str) -> bool:
+        return conversation_id in self._store

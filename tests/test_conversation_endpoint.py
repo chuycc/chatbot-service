@@ -33,17 +33,31 @@ def test_conversation_endpoint_new_conversation():
     assert len(data["conversation_id"]) > 0
 
 def test_conversation_endpoint_existing_conversation():
-    payload = {
-        "conversation_id": "test-conversation-123",
-        "message": "How are you?"
+    # Step 1: Start a new conversation
+    payload1 = {
+        "conversation_id": None,
+        "message": "Hello!"
     }
-    
-    response = client.post("/v1/conversation", json=payload)
-    
-    assert response.status_code == 200
-    data = response.json()
-    
-    assert data["conversation_id"] == "test-conversation-123"
+    response1 = client.post("/v1/conversation", json=payload1)
+    assert response1.status_code == 200
+    data1 = response1.json()
+    conversation_id = data1["conversation_id"]
+    assert conversation_id is not None
+
+    # Step 2: Send another message using the returned conversation_id
+    payload2 = {
+        "conversation_id": conversation_id,
+        "message": "Hello again!"
+    }
+    response2 = client.post("/v1/conversation", json=payload2)
+    assert response2.status_code == 200
+    data2 = response2.json()
+    assert data2["conversation_id"] == conversation_id
+    assert len(data2["message"]) == 4
+    assert data2["message"][0]["role"] == "user"
+    assert data2["message"][1]["role"] == "bot"
+    assert data2["message"][2]["role"] == "user"
+    assert data2["message"][3]["role"] == "bot"
 
 def test_conversation_endpoint_empty_message():
     payload = {
@@ -118,3 +132,12 @@ def test_conversation_endpoint_llm_error_handling(monkeypatch):
     response = client.post("/v1/conversation", json=payload)
     assert response.status_code == 500
     assert "trouble generating a response" in response.json()["detail"]
+
+def test_conversation_endpoint_invalid_conversation_id():
+    payload = {
+        "conversation_id": "invalid-id-123",
+        "message": "Hi!"
+    }
+    response = client.post("/v1/conversation", json=payload)
+    assert response.status_code == 404
+    assert "invalid-id-123" in response.json()["detail"]

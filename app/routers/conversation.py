@@ -12,6 +12,12 @@ llm_adapter = get_llm_adapter()
 
 @router.post("/conversation", response_model=ConversationResponse)
 async def conversation_endpoint(req: ConversationRequest):
+    if req.conversation_id is not None and not storage_adapter.conversation_exists(req.conversation_id):
+        raise HTTPException(
+            status_code=404,
+            detail=f"I can't find a conversation with id '{req.conversation_id}'."
+        )
+
     conversation_id = req.conversation_id or str(uuid4())
 
     # User message

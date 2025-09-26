@@ -18,3 +18,7 @@ class StorageAdapter(ABC):
     @abstractmethod
     def delete_conversation(self, conversation_id: str) -> None:
         pass
+
+    @abstractmethod
+    def conversation_exists(self, conversation_id: str) -> bool:
+        pass

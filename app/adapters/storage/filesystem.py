@@ -77,3 +77,7 @@ class FilesystemStorageAdapter(StorageAdapter):
             except (IOError, OSError) as e:
                 print(f"Error deleting conversation {conversation_id}: {e}")
                 raise
+
+    def conversation_exists(self, conversation_id: str) -> bool:
+        file_path = self._get_file_path(conversation_id)
+        return file_path.exists()
