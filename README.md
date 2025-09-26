@@ -93,7 +93,7 @@ OPENAI_CHAT_SETTINGS={"model": "gpt-4o", "max_completion_tokens": 1000, "tempera
 ## LLM system prompt
 The "system" role is used to provide high-level instructions and context to the language model. It acts as a set of guidelines that influence the model's overall behavior and response generation.
 
-The system prompt can be defined in `prompts/systemt_prompt.txt`
+The system prompt can be defined in `app/prompts/systemt_prompt.txt`
 
 ## Adapters
 This service is designed with a flexible adapter architecture, allowing support for multiple Storage types and LLMs.
