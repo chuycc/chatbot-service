@@ -5,7 +5,11 @@ from app.main import app
 
 client = TestClient(app)
 
-def test_conversation_endpoint_new_conversation():
+def test_conversation_endpoint_new_conversation(monkeypatch):
+    # Remove system prompt to ensure consistent test results
+    from app.routers import conversation
+    monkeypatch.setattr(conversation.llm_adapter, "_load_system_prompt", lambda self=None: None)
+
     payload = {
         "conversation_id": None,
         "message": "2 + 2? Only give the number"
@@ -31,6 +35,7 @@ def test_conversation_endpoint_new_conversation():
     # Check conversation_id is generated
     assert data["conversation_id"] is not None
     assert len(data["conversation_id"]) > 0
+
 
 def test_conversation_endpoint_existing_conversation():
     # Step 1: Start a new conversation
