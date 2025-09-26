@@ -1,6 +1,9 @@
 import pytest
 import asyncio
-from unittest.mock import AsyncMock, MagicMock, patch
+import tempfile
+import os
+from pathlib import Path
+from unittest.mock import AsyncMock, MagicMock, patch, mock_open
 from app.adapters.llm.openai import OpenAIAdapter
 from app.models.conversation import MessageEntry, MessageRole
 
@@ -20,6 +23,15 @@ def sample_messages():
         MessageEntry(role=MessageRole.USER, message="How are you?")
     ]
 
+@pytest.fixture
+def temp_system_prompt_file():
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
+        f.write("You are an assistant")
+        temp_path = f.name
+    
+    yield temp_path
+    
+    os.unlink(temp_path)
 
 class TestOpenAIAdapter:
     def test_convert_to_openai_format(self, openai_adapter, sample_messages):
@@ -87,3 +99,51 @@ class TestOpenAIAdapter:
     def test_empty_messages_list(self, openai_adapter):
         result = openai_adapter._convert_to_openai_format([])
         assert result == []
+
+    def test_system_prompt_file_exists(self):
+        prompt_content = "You are an assistant"
+        adapter = OpenAIAdapter(api_key="test", chat_settings={}, system_prompt_path="test_prompt.txt")
+        
+        with patch("os.path.exists", return_value=True):
+            with patch("builtins.open", mock_open(read_data=prompt_content)):
+                result = adapter._load_system_prompt()
+                assert result == prompt_content
+    
+    def test_load_system_prompt_file_not_exists(self):
+        adapter = OpenAIAdapter(api_key="test", chat_settings={}, system_prompt_path="invalid.txt")
+
+        with patch("os.path.exists", return_value=False):
+            result = adapter._load_system_prompt()
+            assert result is None
+
+    def test_load_system_prompt_empty_file(self):
+        adapter = OpenAIAdapter(api_key="test", chat_settings={}, system_prompt_path="empty.txt")
+
+        with patch("os.path.exists", return_value=True):
+            with patch("builtins.open", mock_open(read_data="")):
+                result = adapter._load_system_prompt()
+                assert result is None
+
+    def test_load_system_prompt_io_error(self):
+        adapter = OpenAIAdapter(api_key="test", chat_settings={}, system_prompt_path="error.txt")
+
+        with patch("os.path.exists", return_value=True):
+            with patch("builtins.open", side_effect=IOError("Permission denied")):
+                result = adapter._load_system_prompt()
+                assert result is None
+
+    def test_convert_to_openai_format_with_system_prompt_from_file(self, sample_messages):
+        prompt_content = "You are an assistant"
+        adapter = OpenAIAdapter(api_key="test", chat_settings={}, system_prompt_path="test.txt")
+
+        with patch.object(adapter, '_load_system_prompt', return_value=prompt_content):
+            result = adapter._convert_to_openai_format(sample_messages)
+
+            expected = [
+                {"role": "system", "content": prompt_content},
+                {"role": "user", "content": "Hello"},
+                {"role": "assistant", "content": "Hi there!"},
+                {"role": "user", "content": "How are you?"}
+            ]
+
+            assert result == expected

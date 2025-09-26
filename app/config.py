@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     # LLM settings
     llm_type: LLMType = LLMType.OPENAI
     llm_timeout: int = 30
+    llm_system_prompt_path: str = "app/prompts/system_prompt.txt"
 
     # OpenAI settings
     openai_api_key: str = ""

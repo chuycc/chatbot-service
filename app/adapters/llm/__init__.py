@@ -8,7 +8,8 @@ def get_llm_adapter() -> LLMAdapter:
         return OpenAIAdapter(
             api_key=settings.openai_api_key,
             chat_settings=settings.openai_chat_settings,
-            timeout=settings.llm_timeout
+            timeout=settings.llm_timeout,
+            system_prompt_path=settings.llm_system_prompt_path
         )
     else:
         raise ValueError(f"Unsupported LLM type: {settings.llm_type}")
