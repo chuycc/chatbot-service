@@ -9,6 +9,7 @@ help:
 	@echo "  run      - Run the service and all related services in Docker"
 	@echo "  down     - Teardown of all running services"
 	@echo "  clean    - Teardown and removal of all containers"
+	@echo "  test     - Run tests"
 
 install: clean
 	@if ! command -v docker >/dev/null 2>&1; then \
