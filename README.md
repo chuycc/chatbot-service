@@ -100,6 +100,5 @@ This service is designed with a flexible adapter architecture, allowing support 
 
 ## Future work
 * Auth middleware
-* Rate middleware
 * Error handling
 * Logs handling

@@ -1,9 +1,11 @@
 from uuid import uuid4
 import asyncio
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from app.models.conversation import ConversationRequest, ConversationResponse, MessageRole, MessageEntry
 from app.adapters.storage import get_storage_adapter
 from app.adapters.llm import get_llm_adapter
+from app.config import settings
+from app.middleware.rate_limit import limiter
 
 router = APIRouter(prefix="/v1", tags=["conversation"])
 
@@ -11,7 +13,8 @@ storage_adapter = get_storage_adapter()
 llm_adapter = get_llm_adapter()
 
 @router.post("/conversation", response_model=ConversationResponse)
-async def conversation_endpoint(req: ConversationRequest):
+@limiter.limit(settings.service_rate_limit)
+async def conversation_endpoint(req: ConversationRequest, request: Request):
     if req.conversation_id is not None and not storage_adapter.conversation_exists(req.conversation_id):
         raise HTTPException(
             status_code=404,

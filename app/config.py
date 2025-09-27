@@ -12,6 +12,7 @@ class LLMType(str, Enum):
 class Settings(BaseSettings):
     # Service
     service_timeout: int = 30
+    service_rate_limit: str = "10/minute"
 
     # Storage settings
     storage_type: StorageType = StorageType.MEMORY
